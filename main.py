@@ -1,5 +1,5 @@
 def main():
-    print("Hello from quantbot!")
+    print("Hello from quantbot !")
 
 
 if __name__ == "__main__":
