@@ -67,7 +67,7 @@ build-backend = "hatchling.build"
 
 # Hatch 建置設定：配置 wheel 包含的檔案
 [tool.hatch.build.targets.wheel]
-packages = ["src"]
+packages = ["quantbot"]
 
 # Ruff 設定：統一程式碼風格與基礎品質檢查。
 [tool.ruff]
@@ -87,29 +87,27 @@ ignore = ["ANN401", "RUF001", "RUF002", "RUF003"]
 [tool.mypy]
 python_version = "3.14"
 strict = true
-
-# 目前僅檢查 quantbot 套件目錄，讓型別檢查聚焦於專案本身。
-files = ["quantbot"]
+files = ["src"]
 
 # import-linter 設定：強制分層架構，避免策略與技術實作混雜。
 [tool.importlinter]
-root_package = "quantbot"
+root_package = "src"
 include_external_packages = true
 
 [[tool.importlinter.contracts]]
-# 合約 1：入口層 (entrypoints) -> 應用層 (application) -> 領域層 (domain)
+# 合約 1：入口層 (entrypoints) -> 應用層 (app) -> 領域層 (domain)
 # 依賴方向必須從外層流向內層，避免業務邏輯直接依賴基礎設施與外部資源。
 name = "分層：依賴方向一律指向 domain"
 type = "layers"
-layers = ["quantbot.entrypoints", "quantbot.application", "quantbot.domain"]
+layers = ["src.entrypoints", "src.app", "src.domain"]
 
 [[tool.importlinter.contracts]]
 # 合約 2：domain 不應知道任何外部技術實作或基礎設施細節。
 # 這能保留純領域邏輯，讓策略、價值物件與業務規則與交易所 API / 資料庫分離。
 name = "domain 不認識任何外部技術"
 type = "forbidden"
-source_modules = ["quantbot.domain"]
-forbidden_modules = ["httpx", "ccxt", "asyncpg", "plotly", "yaml", "quantbot.infrastructure"]
+source_modules = ["src.domain"]
+forbidden_modules = ["httpx", "ccxt", "asyncpg", "plotly", "yaml", "src.infrastructure"]
 
 [tool.uv]
 link-mode = "copy"

@@ -1,7 +1,11 @@
+from pathlib import Path
+
+import pytest
+
 from src.config import Settings
 
 
-def test_save_defaults_declared_on_class():
+def test_save_defaults_declared_on_class() -> None:
     """預設值宣告在類別上，不受 .env、環境變數與工作目錄影響。"""
 
     assert Settings.model_fields["okx_testnet"].default is True
@@ -13,7 +17,7 @@ def test_save_defaults_declared_on_class():
     assert Settings.model_fields["default_market"].default == "spot"
 
 
-def test_env_can_override(monkeypatch, tmp_path):
+def test_env_can_override(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """切正式環境靠環境變數，不靠改 config.py 的預設值。"""
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("OKX_TESTNET", "false")
